@@ -2,14 +2,14 @@ import { gql } from "apollo-server";
 
 const typeDefs = gql`
   type Part {
-    partId: String
+    id: ID!
     description: String
     weight: Int
     color: String
   }
 
   input CreatePartInput {
-    partId: String
+    description: String
     weight: Int
     color: String
   }
@@ -20,15 +20,15 @@ const typeDefs = gql`
   }
 
   type Query {
-    getPart(ID: ID!): Part
+    getPart(id: ID!): Part
     getParts: [Part]
     getNoOfParts: Int
   }
 
   type Mutation {
     createPart(createPartInput: CreatePartInput): Part
-    editPart(ID: ID!, editPartInput: EditPartInput): Boolean
-    deletePart(ID: ID!): Boolean
+    editPart(id: ID!, editPartInput: EditPartInput): Boolean
+    deletePart(id: ID!): Boolean
   }
 `;
 

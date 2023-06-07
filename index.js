@@ -1,22 +1,25 @@
-import { ApolloServer } from "apollo-server";
-import mongoose from "mongoose";
-import { typeDefs } from "./graphql/typeDef.js";
-import { resolvers } from "./graphql/resolvers.js";
+import { ApolloServer } from "@apollo/server";
+import { typeDefs } from "./src/graphql/typeDef.js";
+import { resolvers } from "./src/graphql/resolvers.js";
+import { prisma } from "./src/db.js";
+import { startStandaloneServer } from "@apollo/server/standalone"
+import { CURSOR_FLAGS } from "mongodb";
 
-const MONGODB =
-  "mongodb+srv://kavinduxo:kavinduxo@cluster0.4xuyryf.mongodb.net/?retryWrites=true&w=majority";
-
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-});
-
-mongoose
-  .connect(MONGODB, { useNewUrlParser: true })
-  .then(() => {
-    console.log("Connection created successfully!");
-    return server.listen({ port: 5000 });
-  })
-  .then((result) => {
-    console.log(`Server is running at ${result.url}`);
+const start = async () => {
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers
   });
+
+  
+
+  const { url } = await startStandaloneServer(server, {
+    
+    listen: {port: 5000}
+
+  });
+
+  console.log(`server running at ${url}`);
+}
+
+await start();
