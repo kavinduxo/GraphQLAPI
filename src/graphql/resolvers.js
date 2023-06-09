@@ -7,6 +7,9 @@ const resolvers = {
         where: {
           id: id,
         },
+        include: {
+          package: true,
+        },
       });
 
       return result;
@@ -18,23 +21,40 @@ const resolvers = {
     
     async getNoOfParts() {
       return await prisma.part.count();
-    }
+    },
+
+    async getPackage(_parent, { id }){
+      const result = await prisma.package.findUnique({
+        where: {
+          id: id,
+        },
+        include: {
+          parts: true,
+        },
+      });
+
+      return result;
+    },
   },
 
   Mutation: {
-    async createPart(_parent, { createPartInput: { description, weight, color } }) {
+    async createPart(_parent, { createPartInput: { description, weight, color, posts } }) {
       const result = await prisma.part.create({
         data: {
           description: description,
           weight: weight,
-          color: color
-        }
+          color: color,
+          posts: posts
+        },
+        include: {
+          package: true,
+        },
       });
       console.log(result);
       return result;      
     },
 
-    async editPart(_, { id, editPartInput: { weight, color } }) {
+    async editPart(_parent, { id, editPartInput: { weight, color } }) {
       const result = await prisma.part.update({
         where: {
           id: id,
@@ -49,7 +69,7 @@ const resolvers = {
 
     },
 
-    async deletePart(_, { id }) {
+    async deletePart(_parent, { id }) {
       const deletePart = await prisma.part.delete({
         where: {
           id: id,
@@ -58,6 +78,22 @@ const resolvers = {
 
       return deletePart;
     },
+
+    async createPackage(_parent, { createPackageInput: { name, parts } }) {
+      const result = await prisma.package.create({
+        data: {
+          name: name,
+          parts: {
+            create: parts
+          }
+        },
+        include: {
+          parts: true
+        }
+      });
+
+      return result;
+    }
   },
 };
 

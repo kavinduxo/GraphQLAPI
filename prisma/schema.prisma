@@ -12,9 +12,17 @@ datasource db {
 }
 
 model Part {
-  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
   description String
   weight      Int
-  color       String 
+  color       String
+  package     Package @relation(fields: [pckId], references: [id]) 
+  pckId       String
+}
+
+model Package {
+  id    String  @id @default(auto()) @map("_id") @db.ObjectId
+  name  String 
+  parts Part[]
 }
 
