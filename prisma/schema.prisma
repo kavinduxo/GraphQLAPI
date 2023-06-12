@@ -1,11 +1,13 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+// Generator for the prisma client
 generator client {
   provider = "prisma-client-js"
   previewFeatures = ["mongodb"]
 }
 
+//db configurations
 datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
@@ -16,7 +18,7 @@ model Part {
   description String
   weight      Int
   color       String
-  package     Package @relation(fields: [pckId], references: [id]) 
+  package     Package @relation(fields: [pckId], references: [id]) //mapping with 
   pckId       String
 }
 
